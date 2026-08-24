@@ -68,15 +68,13 @@ def main():
     parser.add_argument(
         "--C",
         type=float,
-        default=1.0,
-        help="Inverse of regularization strength"
+        default=1.0
     )
 
     parser.add_argument(
         "--max_iter",
         type=int,
-        default=100,
-        help="Maximum number of iterations"
+        default=100
     )
 
     args = parser.parse_args()
@@ -85,13 +83,8 @@ def main():
     mlflow.log_param("C", args.C)
     mlflow.log_param("max_iter", args.max_iter)
 
-    # Load data
-    url = (
-        "https://automlsamplenotebookdata.blob.core.windows.net/"
-        "automl-sample-notebook-data/bankmarketing_train.csv"
-    )
-
-    data = pd.read_csv(url)
+    # Load local dataset
+    data = pd.read_csv("bankmarketing_train.csv")
 
     # Clean data
     x, y = clean_data(data)
