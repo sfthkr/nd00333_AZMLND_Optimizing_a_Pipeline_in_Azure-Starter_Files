@@ -34,7 +34,7 @@ The dataset consists of marketing records tied to phone-based direct marketing c
 
 The best-performing **HyperDrive-equivalent sweep run** was **`ashy_sail_69kn9r3g69_12`**, with hyperparameters `C=0.1` and `max_iter=100`, achieving an accuracy of **0.9174506828528073**. Out of 16 total trials, 14 logged an accuracy metric; this run had the highest value among them.
 
-**AutoML model results: _to be added._**
+The best-performing **AutoML run** was `coral_stamp_3fvbjkfk`, a **VotingEnsemble** achieving an accuracy of **0.9184825**, edging out the sweep's best Logistic Regression model.
 
 ---
 
@@ -189,7 +189,9 @@ In SDK v2, AutoML runs are built with `automl.classification(...)` and submitted
 - **`n_cross_validations=5`** — 5-fold cross-validation; metrics are averaged across folds to reduce the risk of overfitting to a single split.
 - **`timeout_minutes=30`** (set via `set_limits()`) — the current Udacity requirement is a 30-minute cap, up from the 15 minutes used in the original SDK v1 walkthrough.
 
-**Results: _to be added once the AutoML run completes._**
+**Results**
+
+The best run, `coral_stamp_3fvbjkfk`, selected a `VotingEnsemble` as its final model, reaching an accuracy of **0.9184825** and an `AUC_weighted` of **0.9486233**. A `VotingEnsemble` combines the predictions of several previously-trained AutoML child models, weighting each one's contribution to the final vote. In this run the ensemble combined nine child models across five algorithm types — `XGBoostClassifier` (4 models, combined weight ≈ 0.571), `LightGBM` (2 models, combined weight ≈ 0.214), `LogisticRegression` (weight ≈ 0.071), `SGD` (weight ≈ 0.071), and `RandomForest` (weight ≈ 0.071) — with `XGBoostClassifier` contributing the largest share of the vote.
 
 ---
 
@@ -211,7 +213,9 @@ In SDK v2, AutoML runs are built with `automl.classification(...)` and submitted
 | AUC_weighted   | 0.9486233 |
 | Algorithm      | VotingEnsemble |
 
-*Comparison and discussion to follow once the AutoML results are filled in.*
+The AutoML `VotingEnsemble` model achieved a slightly higher accuracy (0.9184825) compared to the hyperparameter-tuned Logistic Regression model (0.9174507), representing a marginal improvement of approximately 0.1 percentage points. This modest difference suggests that while ensemble methods can capture more complex, non-linear patterns in the data by combining multiple algorithms (`XGBoostClassifier`, `LightGBM`, `LogisticRegression`, `SGD`, and `RandomForest`), the logistic regression model with optimized hyperparameters performs nearly as well on its own.
+
+The two approaches also come with different trade-offs beyond raw accuracy. AutoML's `VotingEnsemble` required no manual algorithm selection or feature engineering and automatically searched across many model types, but the resulting model is a black-box combination of nine underlying pipelines, making it harder to interpret and slower to score at inference time. The HyperDrive-tuned Logistic Regression, by contrast, offers a single, transparent, well-understood model — its coefficients can be inspected directly, and it is cheaper and faster to deploy and run predictions with — but it required the model family to be chosen manually up front and only its two hyperparameters (`C` and `max_iter`) were tuned. In practice, AutoML is a good fit when squeezing out the last bit of performance matters and compute budget allows for it, while the tuned Logistic Regression is a strong choice when interpretability, faster inference, or simpler deployment are priorities.
 
 ---
 
